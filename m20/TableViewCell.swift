@@ -7,15 +7,16 @@
 
 import UIKit
 import SnapKit
+import CoreData
 
 class ExecutorCell: UITableViewCell {
     
     // MARK: - UI Elements
     
-    private let name: UILabel = UILabel()
-    private let lastname: UILabel = UILabel()
-    private let birthday: UILabel = UILabel()
-    private let country: UILabel = UILabel()
+    var name: UILabel = UILabel()
+     var lastname: UILabel = UILabel()
+     var birthday: UILabel = UILabel()
+     var country: UILabel = UILabel()
     private lazy var stackView:UIStackView = {
        let stackView = UIStackView()
         stackView.distribution = .equalSpacing
@@ -38,11 +39,12 @@ class ExecutorCell: UITableViewCell {
 
     // MARK: - Internal methods
     
-    func configure(with model: Executor) {
-        name.text =  model.name
-        lastname.text = model.lastName
-        birthday.text = model.birthday
-        country.text = model.country
+    func configure(fetchedResultContainer:NSFetchedResultsController<Human>, indexPath:IndexPath) {
+        let people = fetchedResultContainer.object(at: indexPath)
+        name.text =  people.name
+        lastname.text = people.lastname
+        birthday.text = people.birthday
+        country.text = people.country
     }
     
     // MARK: - Private methods

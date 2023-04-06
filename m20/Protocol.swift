@@ -8,6 +8,6 @@
 import Foundation
 
 protocol ExecutorDelegate: class {
-    func update (executor:Executor)
+    func update ()
 }
 

@@ -10,6 +10,7 @@ import UIKit
 class EditingViewController: UIViewController {
     weak var delegate: ExecutorDelegate?
     let vc = MainViewController()
+    var people: Human?
     private lazy var FormStackView:UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
@@ -63,30 +64,29 @@ class EditingViewController: UIViewController {
         button.setTitleColor(.blue, for: .normal)
         return button
     }()
-    var l1: String = ""
-    var l2: String = ""
-    var l3: String = ""
-    var l4: String = ""
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+        if let people = people {
+            nameTextField.text = people.name
+            lastnameTextField.text = people.lastname
+            countryTextField.text = people.country
+            birthTextField.text = people.birthday
+        }
         view.backgroundColor = .white
         addElements()
         setConstraints()
-        nameTextField.text = l1
-        lastnameTextField.text = l2
-        countryTextField.text = l3
-        birthTextField.text = l4
-        
+        nameTextField.text = people?.name
+        lastnameTextField.text = people?.lastname
+        countryTextField.text = people?.country
+        birthTextField.text = people?.birthday
     }
-
     private func addElements() {
         FormStackView.addArrangedSubview(nameLabel)
         FormStackView.addArrangedSubview(nameTextField)
-        FormStackView.addArrangedSubview(birthLabel)
-        FormStackView.addArrangedSubview(birthTextField)
         FormStackView.addArrangedSubview(lastnameLabel)
         FormStackView.addArrangedSubview(lastnameTextField)
+        FormStackView.addArrangedSubview(birthLabel)
+        FormStackView.addArrangedSubview(birthTextField)
         FormStackView.addArrangedSubview(countryLabel)
         FormStackView.addArrangedSubview(countryTextField)
         FormStackView.addArrangedSubview(editButton)
@@ -100,10 +100,13 @@ class EditingViewController: UIViewController {
         }
     }
     @objc func edit() {
-        if let name = nameTextField.text, let lastname = lastnameTextField.text, let birthday = birthTextField.text, let country = countryTextField.text {
-            let executor = Executor(name: name, lastName: lastname, birthday: birthday, country: country)
-            self.delegate?.update(executor: executor)
+            people?.name = nameTextField.text
+            people?.lastname = lastnameTextField.text
+            people?.country = countryTextField.text
+            people?.birthday = birthTextField.text
+            try? people?.managedObjectContext?.save()
+            self.delegate?.update()
             navigationController?.popViewController(animated: true)
         }
     }
-}
+
